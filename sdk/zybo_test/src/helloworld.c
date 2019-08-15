@@ -49,12 +49,47 @@
 #include "platform.h"
 #include "xil_printf.h"
 
+/*************************************************/
+// PS部GPIOのドライバヘッダをインクルード
+#include "xgpiops.h"
+/*************************************************/
 
 int main()
 {
-    init_platform();
+/*************************************************/
+	// PS部GPIOの設定の構造体
+	XGpioPs_Config *ConfigPtr;
+	// PS部GPIOのインスタンス
+	XGpioPs Gpio;
+/*************************************************/
 
-    print("Hello World\n\r");
+	init_platform();
+
+/*************************************************/
+	// 対象のGPIOの設定を参照 (DEVICE IDはxparameters.hに記載されている)
+	ConfigPtr = XGpioPs_LookupConfig(XPAR_XGPIOPS_0_DEVICE_ID);
+	// インスタンスを初期化
+	XGpioPs_CfgInitialize(&Gpio, ConfigPtr, ConfigPtr->BaseAddr);
+/*************************************************/
+
+	print("Hello World\n\r");
+
+/*************************************************/
+	// MIO7を出力ポートに設定
+	XGpioPs_SetDirectionPin(&Gpio, 7, 1);
+	// MIO7の出力イネーブル
+	XGpioPs_SetOutputEnablePin(&Gpio, 7, 1);
+
+	// LED点滅処理
+	u32 CurrentLED = 0;
+	while(1){
+		// LED点滅間隔待ち
+		for(int i = 0; i < 10000000; i++){;}
+
+		// LED点灯状態反転
+		XGpioPs_WritePin(&Gpio, 7, (CurrentLED ^= 1));
+	}
+/*************************************************/
 
     cleanup_platform();
     return 0;

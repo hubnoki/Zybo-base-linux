@@ -55,6 +55,9 @@
 #include "xstatus.h"
 #include "fsbl_hooks.h"
 
+#include "xiicps.h"
+#include "xemacps.h"
+
 /************************** Variable Definitions *****************************/
 
 
@@ -138,6 +141,73 @@ u32 FsblHookBeforeHandoff(void)
 	 * Errors to be stored in the status variable and returned
 	 */
 	fsbl_printf(DEBUG_INFO,"In FsblHookBeforeHandoff function \r\n");
+
+
+	/* Read Out MAC Address */
+	{
+		int Status;
+		XIicPs Iic;
+		XIicPs_Config *Iic_Config;
+		XEmacPs Emac;
+		XEmacPs_Config *Mac_Config;
+
+		unsigned char mac_addr[6];
+		int i = 0;
+
+		fsbl_printf(DEBUG_GENERAL,"Look Up I2C Configuration\n\r");
+		Iic_Config = XIicPs_LookupConfig(XPAR_PS7_I2C_0_DEVICE_ID);
+		if(Iic_Config == NULL) {
+			return XST_FAILURE;
+		}
+
+		fsbl_printf(DEBUG_GENERAL,"I2C Initialization\n\r");
+		Status = XIicPs_CfgInitialize(&Iic, Iic_Config, Iic_Config->BaseAddress);
+		if(Status != XST_SUCCESS) {
+			return XST_FAILURE;
+		}
+
+		fsbl_printf(DEBUG_GENERAL,"Set I2C Clock\n\r");
+		XIicPs_SetSClk(&Iic, 200000);
+
+		mac_addr[0] = 0xFA;
+
+		fsbl_printf(DEBUG_GENERAL,"Set Memory Read Address\n\r");
+		XIicPs_MasterSendPolled(&Iic, mac_addr, 1, 0x50);
+		while(XIicPs_BusIsBusy(&Iic));
+		fsbl_printf(DEBUG_GENERAL,"Get Mac Address\n\r");
+		XIicPs_MasterRecvPolled(&Iic, mac_addr, 6, 0x50);
+		while(XIicPs_BusIsBusy(&Iic));
+
+		fsbl_printf(DEBUG_GENERAL,"MAC Addr: ");
+		for(i = 0; i < 6; i++) {
+			fsbl_printf(DEBUG_GENERAL,"%02x ", mac_addr[i]);
+		}
+		fsbl_printf(DEBUG_GENERAL,"\n\r");
+
+		fsbl_printf(DEBUG_GENERAL,"Look Up Emac Configuration\n\r");
+		Mac_Config = XEmacPs_LookupConfig(XPAR_PS7_ETHERNET_0_DEVICE_ID);
+		if(Mac_Config == NULL) {
+			return XST_FAILURE;
+		}
+
+		fsbl_printf(DEBUG_GENERAL,"Emac Initialization\n\r");
+		Status = XEmacPs_CfgInitialize(&Emac, Mac_Config, Mac_Config->BaseAddress);
+		if(Status != XST_SUCCESS){
+			return XST_FAILURE;
+		}
+
+		fsbl_printf(DEBUG_GENERAL,"Set Emac MAC Address\n\r");
+		Status = XEmacPs_SetMacAddress(&Emac, mac_addr, 1);
+		if(Status != XST_SUCCESS){
+			return XST_FAILURE;
+		}
+
+		fsbl_printf(DEBUG_GENERAL,"Verify Emac MAC Address\n\r");
+		XEmacPs_GetMacAddress(&Emac, mac_addr, 1);
+		if(Status != XST_SUCCESS){
+			return XST_FAILURE;
+		}
+	}
 
 	return (Status);
 }

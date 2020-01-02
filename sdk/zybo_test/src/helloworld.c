@@ -80,6 +80,8 @@ int main()
 	// MIO7の出力イネーブル
 	XGpioPs_SetOutputEnablePin(&Gpio, 7, 1);
 
+	*(unsigned int *)0x41200004 = 0;
+
 	// LED点滅処理
 	u32 CurrentLED = 0;
 	while(1){
@@ -87,6 +89,8 @@ int main()
 		for(int i = 0; i < 10000000; i++){;}
 
 		// LED点灯状態反転
+		if(CurrentLED)	*(unsigned int *)0x41200000 = 0xF;
+		else			*(unsigned int *)0x41200000 = 0x0;
 		XGpioPs_WritePin(&Gpio, 7, (CurrentLED ^= 1));
 	}
 /*************************************************/

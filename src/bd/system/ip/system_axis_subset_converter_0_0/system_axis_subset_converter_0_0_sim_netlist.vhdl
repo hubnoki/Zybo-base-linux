@@ -1,10 +1,10 @@
 -- Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
--- Tool Version: Vivado v.2017.4 (lin64) Build 2086221 Fri Dec 15 20:54:30 MST 2017
--- Date        : Fri Mar 23 16:59:23 2018
--- Host        : ubuntu running 64-bit Ubuntu 16.04.3 LTS
+-- Tool Version: Vivado v.2017.4 (win64) Build 2086221 Fri Dec 15 20:55:39 MST 2017
+-- Date        : Mon Apr  6 01:55:55 2020
+-- Host        : LAPTOP-PM4M397G running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode funcsim
---               /home/digilent/work/git/Zybo-base-linux/src/bd/system/ip/system_axis_subset_converter_0_0/system_axis_subset_converter_0_0_sim_netlist.vhdl
+--               C:/work/ZYBO_linux/Zybo-base-linux/src/bd/system/ip/system_axis_subset_converter_0_0/system_axis_subset_converter_0_0_sim_netlist.vhdl
 -- Design      : system_axis_subset_converter_0_0
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -21,9 +21,9 @@ entity system_axis_subset_converter_0_0_top_system_axis_subset_converter_0_0 is
     aclken : in STD_LOGIC;
     s_axis_tvalid : in STD_LOGIC;
     s_axis_tready : out STD_LOGIC;
-    s_axis_tdata : in STD_LOGIC_VECTOR ( 23 downto 0 );
-    s_axis_tstrb : in STD_LOGIC_VECTOR ( 2 downto 0 );
-    s_axis_tkeep : in STD_LOGIC_VECTOR ( 2 downto 0 );
+    s_axis_tdata : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    s_axis_tstrb : in STD_LOGIC_VECTOR ( 3 downto 0 );
+    s_axis_tkeep : in STD_LOGIC_VECTOR ( 3 downto 0 );
     s_axis_tlast : in STD_LOGIC;
     s_axis_tid : in STD_LOGIC_VECTOR ( 0 to 0 );
     s_axis_tdest : in STD_LOGIC_VECTOR ( 0 to 0 );
@@ -57,7 +57,7 @@ entity system_axis_subset_converter_0_0_top_system_axis_subset_converter_0_0 is
   attribute C_S_AXIS_SIGNAL_SET : string;
   attribute C_S_AXIS_SIGNAL_SET of system_axis_subset_converter_0_0_top_system_axis_subset_converter_0_0 : entity is "32'b00000000000000000000000010011011";
   attribute C_S_AXIS_TDATA_WIDTH : integer;
-  attribute C_S_AXIS_TDATA_WIDTH of system_axis_subset_converter_0_0_top_system_axis_subset_converter_0_0 : entity is 24;
+  attribute C_S_AXIS_TDATA_WIDTH of system_axis_subset_converter_0_0_top_system_axis_subset_converter_0_0 : entity is 32;
   attribute C_S_AXIS_TDEST_WIDTH : integer;
   attribute C_S_AXIS_TDEST_WIDTH of system_axis_subset_converter_0_0_top_system_axis_subset_converter_0_0 : entity is 1;
   attribute C_S_AXIS_TID_WIDTH : integer;
@@ -109,8 +109,8 @@ end system_axis_subset_converter_0_0_top_system_axis_subset_converter_0_0;
 architecture STRUCTURE of system_axis_subset_converter_0_0_top_system_axis_subset_converter_0_0 is
   signal \<const0>\ : STD_LOGIC;
   signal \^m_axis_tready\ : STD_LOGIC;
-  signal \^s_axis_tdata\ : STD_LOGIC_VECTOR ( 23 downto 0 );
-  signal \^s_axis_tkeep\ : STD_LOGIC_VECTOR ( 2 downto 0 );
+  signal \^s_axis_tdata\ : STD_LOGIC_VECTOR ( 31 downto 0 );
+  signal \^s_axis_tkeep\ : STD_LOGIC_VECTOR ( 3 downto 0 );
   signal \^s_axis_tlast\ : STD_LOGIC;
   signal \^s_axis_tuser\ : STD_LOGIC_VECTOR ( 0 to 0 );
   signal \^s_axis_tvalid\ : STD_LOGIC;
@@ -121,7 +121,9 @@ begin
   \^s_axis_tlast\ <= s_axis_tlast;
   \^s_axis_tuser\(0) <= s_axis_tuser(0);
   \^s_axis_tvalid\ <= s_axis_tvalid;
-  m_axis_tdata(23 downto 0) <= \^s_axis_tdata\(23 downto 0);
+  m_axis_tdata(23 downto 16) <= \^s_axis_tdata\(23 downto 16);
+  m_axis_tdata(15 downto 8) <= \^s_axis_tdata\(7 downto 0);
+  m_axis_tdata(7 downto 0) <= \^s_axis_tdata\(15 downto 8);
   m_axis_tdest(0) <= \<const0>\;
   m_axis_tid(0) <= \<const0>\;
   m_axis_tkeep(2 downto 0) <= \^s_axis_tkeep\(2 downto 0);
@@ -149,8 +151,8 @@ entity system_axis_subset_converter_0_0 is
     aresetn : in STD_LOGIC;
     s_axis_tvalid : in STD_LOGIC;
     s_axis_tready : out STD_LOGIC;
-    s_axis_tdata : in STD_LOGIC_VECTOR ( 23 downto 0 );
-    s_axis_tkeep : in STD_LOGIC_VECTOR ( 2 downto 0 );
+    s_axis_tdata : in STD_LOGIC_VECTOR ( 31 downto 0 );
+    s_axis_tkeep : in STD_LOGIC_VECTOR ( 3 downto 0 );
     s_axis_tlast : in STD_LOGIC;
     s_axis_tuser : in STD_LOGIC_VECTOR ( 0 to 0 );
     m_axis_tvalid : out STD_LOGIC;
@@ -193,7 +195,7 @@ architecture STRUCTURE of system_axis_subset_converter_0_0 is
   attribute C_S_AXIS_SIGNAL_SET : string;
   attribute C_S_AXIS_SIGNAL_SET of inst : label is "32'b00000000000000000000000010011011";
   attribute C_S_AXIS_TDATA_WIDTH : integer;
-  attribute C_S_AXIS_TDATA_WIDTH of inst : label is 24;
+  attribute C_S_AXIS_TDATA_WIDTH of inst : label is 32;
   attribute C_S_AXIS_TDEST_WIDTH : integer;
   attribute C_S_AXIS_TDEST_WIDTH of inst : label is 1;
   attribute C_S_AXIS_TID_WIDTH : integer;
@@ -257,7 +259,7 @@ architecture STRUCTURE of system_axis_subset_converter_0_0 is
   attribute X_INTERFACE_INFO of s_axis_tdata : signal is "xilinx.com:interface:axis:1.0 S_AXIS TDATA";
   attribute X_INTERFACE_INFO of s_axis_tkeep : signal is "xilinx.com:interface:axis:1.0 S_AXIS TKEEP";
   attribute X_INTERFACE_INFO of s_axis_tuser : signal is "xilinx.com:interface:axis:1.0 S_AXIS TUSER";
-  attribute X_INTERFACE_PARAMETER of s_axis_tuser : signal is "XIL_INTERFACENAME S_AXIS, TDATA_NUM_BYTES 3, TDEST_WIDTH 0, TID_WIDTH 0, TUSER_WIDTH 1, HAS_TREADY 1, HAS_TSTRB 0, HAS_TKEEP 1, HAS_TLAST 1, FREQ_HZ 142857132, PHASE 0.000, CLK_DOMAIN system_processing_system7_0_0_FCLK_CLK1, LAYERED_METADATA undef";
+  attribute X_INTERFACE_PARAMETER of s_axis_tuser : signal is "XIL_INTERFACENAME S_AXIS, TDATA_NUM_BYTES 4, TDEST_WIDTH 0, TID_WIDTH 0, TUSER_WIDTH 1, HAS_TREADY 1, HAS_TSTRB 0, HAS_TKEEP 1, HAS_TLAST 1, FREQ_HZ 142857132, PHASE 0.000, CLK_DOMAIN system_processing_system7_0_0_FCLK_CLK1, LAYERED_METADATA undef";
 begin
 inst: entity work.system_axis_subset_converter_0_0_top_system_axis_subset_converter_0_0
      port map (
@@ -273,13 +275,13 @@ inst: entity work.system_axis_subset_converter_0_0_top_system_axis_subset_conver
       m_axis_tstrb(2 downto 0) => NLW_inst_m_axis_tstrb_UNCONNECTED(2 downto 0),
       m_axis_tuser(0) => m_axis_tuser(0),
       m_axis_tvalid => m_axis_tvalid,
-      s_axis_tdata(23 downto 0) => s_axis_tdata(23 downto 0),
+      s_axis_tdata(31 downto 0) => s_axis_tdata(31 downto 0),
       s_axis_tdest(0) => '0',
       s_axis_tid(0) => '0',
-      s_axis_tkeep(2 downto 0) => s_axis_tkeep(2 downto 0),
+      s_axis_tkeep(3 downto 0) => s_axis_tkeep(3 downto 0),
       s_axis_tlast => s_axis_tlast,
       s_axis_tready => s_axis_tready,
-      s_axis_tstrb(2 downto 0) => B"111",
+      s_axis_tstrb(3 downto 0) => B"1111",
       s_axis_tuser(0) => s_axis_tuser(0),
       s_axis_tvalid => s_axis_tvalid,
       sparse_tkeep_removed => NLW_inst_sparse_tkeep_removed_UNCONNECTED,

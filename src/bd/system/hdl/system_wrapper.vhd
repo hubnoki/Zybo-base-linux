@@ -1,8 +1,8 @@
 --Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
---Tool Version: Vivado v.2017.4 (lin64) Build 2086221 Fri Dec 15 20:54:30 MST 2017
---Date        : Fri Mar 23 16:46:41 2018
---Host        : ubuntu running 64-bit Ubuntu 16.04.3 LTS
+--Tool Version: Vivado v.2017.4 (win64) Build 2086221 Fri Dec 15 20:55:39 MST 2017
+--Date        : Mon Apr  6 03:07:11 2020
+--Host        : LAPTOP-PM4M397G running 64-bit major release  (build 9200)
 --Command     : generate_target system_wrapper.bd
 --Design      : system_wrapper
 --Purpose     : IP block netlist
@@ -127,12 +127,12 @@ architecture STRUCTURE of system_wrapper is
     sysclk : in STD_LOGIC_VECTOR ( 0 to 0 );
     ac_recdat : in STD_LOGIC_VECTOR ( 0 to 0 );
     ac_bclk : out STD_LOGIC_VECTOR ( 0 to 0 );
-    ac_reclrc : out STD_LOGIC_VECTOR ( 0 to 0 );
     ac_pblrc : out STD_LOGIC_VECTOR ( 0 to 0 );
+    ac_reclrc : out STD_LOGIC_VECTOR ( 0 to 0 );
     ac_pbdat : out STD_LOGIC_VECTOR ( 0 to 0 );
     ac_mclk : out STD_LOGIC;
-    ac_muten : out STD_LOGIC_VECTOR ( 0 to 0 );
-    HDMI_OEN : out STD_LOGIC_VECTOR ( 0 to 0 )
+    HDMI_OEN : out STD_LOGIC_VECTOR ( 0 to 0 );
+    ac_muten : out STD_LOGIC_VECTOR ( 0 to 0 )
   );
   end component system;
   component IOBUF is
